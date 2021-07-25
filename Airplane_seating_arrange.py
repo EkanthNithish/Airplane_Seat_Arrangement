@@ -118,7 +118,7 @@ class Airplane_seating_arrangement:
               self.Aisle_seat.remove(self.temp)
     
             elif(len(self.Window_seat)!=0):
-              #choosing id's and seats randomly
+              
               passenger_id=random.choice(self.Prime)
               self.temp=random.choice(self.Window_seat)
               self.Seat[self.temp[0]][self.temp[1]][self.temp[2]]=passenger_id
@@ -126,7 +126,7 @@ class Airplane_seating_arrangement:
               self.Window_seat.remove(self.temp)  
     
             else :
-              #choosing id's and seats randomly
+              
               passenger_id=random.choice(self.Prime)
               self.temp=random.choice(self.Middle_seat)
               self.Seat[self.temp[0]][self.temp[1]][self.temp[2]]=passenger_id
@@ -144,7 +144,7 @@ class Airplane_seating_arrangement:
               self.Power.remove(passenger_id)
               self.Aisle_seat.remove(self.temp)
             
-             #alloting in Window seats    
+                
             elif(len(self.Window_seat)!=0):
               passenger_id=random.choice(self.Power)
               self.temp=random.choice(self.Window_seat)
@@ -152,7 +152,7 @@ class Airplane_seating_arrangement:
               self.Power.remove(passenger_id)
               self.Window_seat.remove(self.temp)
         
-             #alloting in Center seats    
+               
             else :
               passenger_id=random.choice(self.Power)
               self.temp=random.choice(self.Middle_seat)
@@ -199,14 +199,17 @@ class Airplane_seating_arrangement:
         self.Prime_passengers()
         self.Power_0f_2_passenger()
         self.other_passengers()
-        self.Final_seat_arrangement()
+        self.Final_seat_arrangement_vis()
         
 # =============================================================================
 # DoneBY: Ekanth Nithish PGV
 # =============================================================================
 
 if __name__ == '__main__':
-    KF = Airplane_seating_arrangement()
-    KF.Main()
+    try:
+        KF = Airplane_seating_arrangement()
+        KF.Main()
+    except Exception as e:
+        print(e)
 
     
