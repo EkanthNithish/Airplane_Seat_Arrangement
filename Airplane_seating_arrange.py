@@ -1,19 +1,26 @@
+# =============================================================================
+# Importing required libraries
+# =============================================================================
 import math
 import random
 
 class Airplane_seating_arrangement:
     
     def __init__(self):
+# =============================================================================
+#         This function will act as a constructor to get the input from the 
+#         user for the respective class.
+# =============================================================================
         self.n=int(input("Number of Matrices : "))
-        self.dim=[]
-        self.temp=()
-        self.Seat=[]
-        self.Prime=[]
-        self.Power=[]
-        self.Other=[]
-        self.Window_seat=[] 
-        self.Aisle_seat=[]
-        self.Middle_seat=[]
+        self.dim=[]         #Stores number of rows and columns 
+        self.temp=()        #Stores rows and column of ith matrix  
+        self.Seat=[]        #Stores final allocated seat
+        self.Prime=[]       #Stores the Prime number of the given input passenger's id
+        self.Power=[]       #Stores the multiple of 2 number of the given input passenger's id
+        self.Other=[]       #Stores the Other numbers of the given input passenger's id
+        self.Window_seat=[] #Storing corresponding window seat as tuple
+        self.Aisle_seat=[]  #Storing corresponding Aisle seat as tuple
+        self.Middle_seat=[] #Storing corresponding Middle seat as tuple
         print("Passenger's id : ",end=" ")
         self.passenger=list(map(int,input().split(' ')))
         for i in range(self.n):
@@ -26,6 +33,10 @@ class Airplane_seating_arrangement:
           self.temp=()
     
     def findPrime(self, num):
+# =============================================================================
+#         This function will help to find out the prime numbers from the given 
+#         input.
+# =============================================================================
         if (num==1):
               return False
         elif (num==2):
@@ -37,22 +48,33 @@ class Airplane_seating_arrangement:
           return True  
             
     def multiple_of_2_power_n(self, n):
+# =============================================================================
+#         This function will help to find out the multiple of 2 power n from
+#         the given input
+# =============================================================================
         Log=math.log(n,2)
         AbsoltueValue=int(Log)
         Sol = True if Log==AbsoltueValue else False
         return Sol
     
     def Seat_init(self):
+# =============================================================================
+#         This function will create a list of seats for the given 2D matrix.
+# =============================================================================
         for i in range(self.n):
           mat=[]
           Row=self.dim[i][0]
           Col=self.dim[i][1]
           for j in range(Row):
-            rows=[0]*Col
+            rows=['XX']*Col #Allocating every seat as 'XX'
             mat.append(rows)
           self.Seat.append(mat)
     
     def PPO_spliter(self):
+# =============================================================================
+#         This function will split the given passenger’s id according to the 
+#         given constraint.
+# =============================================================================
         for i in self.passenger:
             if(self.findPrime(i)):
               self.Prime.append(i)
@@ -62,6 +84,9 @@ class Airplane_seating_arrangement:
               self.Other.append(i)
     
     def Seat_finder(self):
+# =============================================================================
+#         This function will create the list of seat as Window, Middle and Aisle.
+# =============================================================================
         for i in range(self.n):
           if(i==0):
             Row=self.dim[i][0]
@@ -84,11 +109,11 @@ class Airplane_seating_arrangement:
             Col=self.dim[i][1]
             for j in range(Row):
               for k in range(Col): 
-                #checking if first column
+               
                 if(k==0):
                   self.temp=(i,j,k)
                   self.Aisle_seat.append(self.temp)
-                #checking if last column
+               
                 elif(k==Col-1):
                   self.temp=(i,j,k)
                   self.Window_seat.append(self.temp)
@@ -106,110 +131,101 @@ class Airplane_seating_arrangement:
                 else:
                   self.temp=(i,j,k)
                   self.Middle_seat.append(self.temp)
-    
-    def Prime_passengers(self):
-        while(len(self.Prime)!=0):
+                  
+
+    def Passengers_Rule(self, condition):
+# =============================================================================
+#         This function will take the prime passangers as a first priority for allocation.
+# =============================================================================
+        while(len(condition)!=0):
             if(len(self.Aisle_seat)!=0):
     
-              passenger_id=random.choice(self.Prime)
+              passenger_id=random.choice(condition)
               self.temp=random.choice(self.Aisle_seat)
               self.Seat[self.temp[0]][self.temp[1]][self.temp[2]]=passenger_id
-              self.Prime.remove(passenger_id)
+              condition.remove(passenger_id)
               self.Aisle_seat.remove(self.temp)
     
             elif(len(self.Window_seat)!=0):
               
-              passenger_id=random.choice(self.Prime)
+              passenger_id=random.choice(condition)
               self.temp=random.choice(self.Window_seat)
               self.Seat[self.temp[0]][self.temp[1]][self.temp[2]]=passenger_id
-              self.Prime.remove(passenger_id)
+              condition.remove(passenger_id)
               self.Window_seat.remove(self.temp)  
     
             else :
               
-              passenger_id=random.choice(self.Prime)
+              passenger_id=random.choice(condition)
               self.temp=random.choice(self.Middle_seat)
               self.Seat[self.temp[0]][self.temp[1]][self.temp[2]]=passenger_id
-              self.Prime.remove(passenger_id)
+              condition.remove(passenger_id)
               self.Middle_seat.remove(self.temp)
-    
-    def Power_0f_2_passenger(self):
+              
+    def output_format(self):
+# =============================================================================
+#         This Function displays Whether the seat is Window, Aisle, Middle
+#         Window as 'WW'
+#         Aisle as 'AA'
+#         Middle as 'MM'
+# =============================================================================
+        Length = len(self.dim)
+
+        Final = []
         
-        while(len(self.Power)!=0):
-             #alloting in Aisle seats    
-            if(len(self.Aisle_seat)!=0):
-              passenger_id=random.choice(self.Power)
-              self.temp=random.choice(self.Aisle_seat)
-              self.Seat[self.temp[0]][self.temp[1]][self.temp[2]]=passenger_id
-              self.Power.remove(passenger_id)
-              self.Aisle_seat.remove(self.temp)
-            
+        for loc in range(Length):
+            if loc == 0 or loc == (Length -1):
+                Input = self.dim[loc][1]
+                LC = []
+                for x in range(Input):
+                    if (x == 0 and loc == 0) or (x == Input - 1 and loc == Length -1):
+                        LC.append('WW')
+                    elif (loc == 0 and x == Input -1) or (loc == Length -1 and x == 0):
+                        LC.append('AA')
+                    else:
+                        LC.append('MM')
+                Final.append(LC)        
+            else:
+                Input = self.dim[loc][1]
+                LC = ["AA" if (x == 0 or x == Input - 1) else 'MM' for x in range(Input)]
+                Final.append(LC) 
                 
-            elif(len(self.Window_seat)!=0):
-              passenger_id=random.choice(self.Power)
-              self.temp=random.choice(self.Window_seat)
-              self.Seat[self.temp[0]][self.temp[1]][self.temp[2]]=passenger_id
-              self.Power.remove(passenger_id)
-              self.Window_seat.remove(self.temp)
-        
-               
-            else :
-              passenger_id=random.choice(self.Power)
-              self.temp=random.choice(self.Middle_seat)
-              self.Seat[self.temp[0]][self.temp[1]][self.temp[2]]=passenger_id
-              self.Power.remove(passenger_id)
-              self.Middle_seat.remove(self.temp)
-       
-    def other_passengers(self):        
-        while(len(self.Other)!=0):
-            #alloting in Aisle seats
-            if(len(self.Aisle_seat)!=0):
-        
-              passenger_id=random.choice(self.Other)
-              self.temp=random.choice(self.Aisle_seat)
-              self.Seat[self.temp[0]][self.temp[1]][self.temp[2]]=passenger_id
-              self.Other.remove(passenger_id)
-              self.Aisle_seat.remove(self.temp)
-        
-            elif(len(self.Window_seat)!=0):
-              passenger_id=random.choice(self.Other)
-              self.temp=random.choice(self.Window_seat)
-              self.Seat[self.temp[0]][self.temp[1]][self.temp[2]]=passenger_id
-              self.Other.remove(passenger_id)
-              self.Window_seat.remove(self.temp)  
-        
-            else :
-              passenger_id=random.choice(self.Other)
-              self.temp=random.choice(self.Middle_seat)
-              self.Seat[self.temp[0]][self.temp[1]][self.temp[2]]=passenger_id
-              self.Other.remove(passenger_id)
-              self.Middle_seat.remove(self.temp)
+        return Final        
     
     def Final_seat_arrangement_vis(self):
+# =============================================================================
+#         This function will visualize the output of list of the seats.
+# =============================================================================
+        Final = self.output_format()
         for i in range(self.n):
           Row=self.dim[i][0]
+          print(Final[i])
           for j in range(Row):
-            print(self.Seat[i][j]) 
+            print(list(map(str,(self.Seat[i][j]))))
           print(' ')
     
     def Main(self):
         self.Seat_init()
         self.PPO_spliter()
         self.Seat_finder()
-        self.Prime_passengers()
-        self.Power_0f_2_passenger()
-        self.other_passengers()
+        self.Passengers_Rule(self.Prime)
+        self.Passengers_Rule(self.Power)
+        self.Passengers_Rule(self.Other)
         self.Final_seat_arrangement_vis()
         
-# =============================================================================
-# DoneBY: Ekanth Nithish PGV
-# =============================================================================
+
 
 if __name__ == '__main__':
     try:
+# =============================================================================
+#         Creating the object as KF for the created class.
+# =============================================================================
         KF = Airplane_seating_arrangement()
         KF.Main()
     except Exception as e:
         print(e)
 
-    
+
+# =============================================================================
+# DoneBY: Ekanth Nithish PGV
+# =============================================================================
