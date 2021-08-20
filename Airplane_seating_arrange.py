@@ -1,4 +1,3 @@
-#Given Input = 29 59 14 11 3 13 15 18 12 16 6 17 7 47 61 5 21 2 41 9 10 8 19 1 4
 # =============================================================================
 # Importing required libraries
 # =============================================================================
@@ -22,6 +21,9 @@ class Airplane_seating_arrangement:
         self.Aisle_seat=[]  #Storing corresponding Aisle seat as tuple
         self.Middle_seat=[] #Storing corresponding Middle seat as tuple
         self.count = 0
+        self.Aisle_resort=[]
+        self.Window_resort=[]
+        self.Middle_resort=[]
         print("Passenger's id : ",end=" ")
         self.passenger=list(map(int,input().split(' ')))
         for i in range(self.n):
@@ -60,12 +62,9 @@ class Airplane_seating_arrangement:
 #         This function will help to find out the multiple of 2 power n from
 #         the given input
 # =============================================================================
-        Log=math.log(n,2)#n=65
-        #6.02..
+        Log=math.log(n,2)
         AbsoltueValue=int(Log)
-        #6=6.02
         Sol = True if Log==AbsoltueValue else False
-                     #6.022==6.0 returns false
         return Sol
     
     def Seat_init(self):
@@ -76,9 +75,8 @@ class Airplane_seating_arrangement:
           mat=[] 
           Row=self.dim[i][0]
           Col=self.dim[i][1]
-          #2D matrix which is the given matrix by user [(2,3),(3,4),(3,2),(4,3)]
           for j in range(Row):
-            rows=['XX']*Col   #Allocating every seat as 'XX'
+            rows=['XX']*Col   
             mat.append(rows)
           self.Seat.append(mat)
     
@@ -106,7 +104,7 @@ class Airplane_seating_arrangement:
             for j in range(Row):
               for k in range(Col): 
                 if(k==0):
-                  self.temp=(i,j,k) #temp(matrix, row, column)
+                  self.temp=(i,j,k) 
                   self.Window_seat.append(self.temp)
                 elif(k==Col-1):
                   self.temp=(i,j,k)
@@ -139,37 +137,51 @@ class Airplane_seating_arrangement:
                 else:
                   self.temp=(i,j,k)
                   self.Middle_seat.append(self.temp)
+# =============================================================================
+#          Placing passenger Id --> from top to bottom, left to right
+# =============================================================================
                   
+    def resort(self):
+        legacy=[self.Aisle_seat,self.Window_seat,self.Middle_seat ]
+        new = [self.Aisle_resort,self.Window_resort, self.Middle_resort]
+        for key,value in zip(legacy,new):
+            for i in range(self.n):
+                for j in key:
+                        if j[1] == i:
+                            value.append(j)
 
-    def Passengers_Rule(self, condition): #conditions are prime, multiple of 2 and remaining passenger id's
+    def Passengers_Rule(self, condition): 
 # =============================================================================
 #         This function will take the prime passangers as a first priority for allocation.
 # =============================================================================
         while(len(condition)!=0):
-            if(len(self.Aisle_seat)!=0):
+            if(len(self.Aisle_resort)!=0):
               
               passenger_id = condition[0]
-              self.temp=self.Aisle_seat[0]
+              self.temp=self.Aisle_resort[0]
               self.Seat[self.temp[0]][self.temp[1]][self.temp[2]]=passenger_id
-                       # matrix          row          column
               condition.remove(passenger_id)
-              self.Aisle_seat.remove(self.temp)
+              self.Aisle_resort.remove(self.temp)
     
-            elif(len(self.Window_seat)!=0):
+            elif(len(self.Window_resort)!=0):
               passenger_id = condition[0]
-              self.temp = self.Window_seat[0]
+              self.temp = self.Window_resort[0]
               self.Seat[self.temp[0]][self.temp[1]][self.temp[2]]=passenger_id
               condition.remove(passenger_id)
-              self.Window_seat.remove(self.temp)  
+              self.Window_resort.remove(self.temp)  
     
             else :
               
               passenger_id = condition[0]
-              self.temp = self.Middle_seat[0]
+              self.temp = self.Middle_resort[0]
               self.Seat[self.temp[0]][self.temp[1]][self.temp[2]]=passenger_id
               condition.remove(passenger_id)
-              self.Middle_seat.remove(self.temp)
+              self.Middle_resort.remove(self.temp)
               
+                
+        
+        
+        
     def output_format(self):
 # =============================================================================
 #         This Function displays Whether the seat is Window, Aisle, Middle
@@ -177,15 +189,15 @@ class Airplane_seating_arrangement:
 #         Aisle as 'AA'
 #         Middle as 'MM'
 # =============================================================================
-        Length = len(self.dim) #Length of the matrix 
+        Length = len(self.dim) 
 
-        Final = [] # Example = [['WW' 'MM' 'AA']]
+        Final = [] 
         
         for loc in range(Length):
-            if loc == 0 or loc == (Length -1): # First and Last matrix
+            if loc == 0 or loc == (Length -1): 
                 Input = self.dim[loc][1] 
                 LC = []
-                for x in range(Input): # x is column
+                for x in range(Input): 
                     if (x == 0 and loc == 0) or (x == Input - 1 and loc == Length -1):
                         LC.append('WW')
                     elif (loc == 0 and x == Input -1) or (loc == Length -1 and x == 0):
@@ -223,6 +235,7 @@ class Airplane_seating_arrangement:
         self.Input_Check()
         self.PPO_spliter()
         self.Seat_finder()
+        self.resort()
         self.Passengers_Rule(self.Prime)
         self.Passengers_Rule(self.Power)
         self.Passengers_Rule(self.Other)
