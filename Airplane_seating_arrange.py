@@ -62,12 +62,9 @@ class Airplane_seating_arrangement:
 #         This function will help to find out the multiple of 2 power n from
 #         the given input
 # =============================================================================
-        Log=math.log(n,2)#n=65
-        #6.02..
+        Log=math.log(n,2)
         AbsoltueValue=int(Log)
-        #6=6.02
         Sol = True if Log==AbsoltueValue else False
-                     #6.022==6.0 returns false
         return Sol
     
     def Seat_init(self):
@@ -78,7 +75,6 @@ class Airplane_seating_arrangement:
           mat=[] 
           Row=self.dim[i][0]
           Col=self.dim[i][1]
-          #2D matrix which is the given matrix by user [(2,3),(3,4),(3,2),(4,3)]
           for j in range(Row):
             rows=['XX']*Col   #Allocating every seat as 'XX'
             mat.append(rows)
@@ -151,7 +147,7 @@ class Airplane_seating_arrangement:
                         if j[1] == i:
                             value.append(j)
 
-    def Passengers_Rule(self, condition): #conditions are prime, multiple of 2 and remaining passenger id's
+    def Passengers_Rule(self, condition):
 # =============================================================================
 #         This function will take the prime passangers as a first priority for allocation.
 # =============================================================================
@@ -190,15 +186,15 @@ class Airplane_seating_arrangement:
 #         Aisle as 'AA'
 #         Middle as 'MM'
 # =============================================================================
-        Length = len(self.dim) #Length of the matrix 
+        Length = len(self.dim) 
 
         Final = [] # Example = [['WW' 'MM' 'AA']]
         
         for loc in range(Length):
-            if loc == 0 or loc == (Length -1): # First and Last matrix
+            if loc == 0 or loc == (Length -1): 
                 Input = self.dim[loc][1] 
                 LC = []
-                for x in range(Input): # x is column
+                for x in range(Input): 
                     if (x == 0 and loc == 0) or (x == Input - 1 and loc == Length -1):
                         LC.append('WW')
                     elif (loc == 0 and x == Input -1) or (loc == Length -1 and x == 0):
@@ -237,9 +233,6 @@ class Airplane_seating_arrangement:
         self.PPO_spliter()
         self.Seat_finder()
         self.resort()
-        #print(self.Aisle_seat)
-        #print(self.Window_resort)
-        #print(self.Middle_resort)
         self.Passengers_Rule(self.Prime)
         self.Passengers_Rule(self.Power)
         self.Passengers_Rule(self.Other)
